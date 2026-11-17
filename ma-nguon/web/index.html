@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <!-- Adapted header/cards from SENTINEL, Copyright2026 Team Core Dumped, Apache-2.0.
+       SafeWear changes2026: Vietnamese UI, real-data adapter, local alarms/history. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SafeWear · Trạm giám sát</title>
+  <link rel="stylesheet" href="/static/sentinel.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">S</span><div>SafeWear<small>AN TOÀN TỪ KẾT NỐI</small></div></div>
+    <p class="nav-label">KHÔNG GIAN LÀM VIỆC</p>
+    <a class="nav-item selected" href="#overview"><span>▦</span>Tổng quan</a>
+    <a class="nav-item" href="#events"><span>◷</span>Nhật ký cảnh báo</a>
+    <a class="nav-item" href="#diagnostics"><span>⌁</span>Trạng thái hệ thống</a>
+    <div class="sidebar-note"><span class="status-dot"></span>Trạm xử lý cục bộ<p>Dữ liệu được xử lý và lưu tại máy tính này.</p></div>
+    <div class="sidebar-footer">ĐỒ ÁN TỐT NGHIỆP<small>STM32 · LoRa · Local AI</small></div>
+  </aside>
+  <div class="workspace">
+    <header class="page-header"><div><div class="eyebrow">TRẠM GIÁM SÁT / TỔNG QUAN</div><h1>An toàn người lao động</h1><p>Theo dõi thiết bị và tiếp nhận yêu cầu hỗ trợ tại chỗ.</p></div><div class="header-right"><span id="web-status" class="connection-pill">Đang kết nối…</span><span id="clock">—</span></div></header>
+    <div id="mode-banner" class="mode-banner" role="status">Đang kết nối dịch vụ cục bộ…</div>
+    <div id="storage-banner" class="mode-banner demo" hidden role="alert">LỖI LƯU TRỮ — Cảnh báo mới chỉ được giữ tạm, chưa lưu bền. Kiểm tra ổ đĩa.</div>
+    <main id="overview">
+      <section class="summary-grid" aria-label="Tổng hợp">
+        <div class="stat-card"><div class="stat-label">THIẾT BỊ ĐANG KẾT NỐI</div><div class="stat-number"><span id="online-count">0</span><small id="total-count">/ 0 thiết bị</small></div><span class="stat-caption">Trong 15 giây gần nhất</span></div>
+        <div class="stat-card"><div class="stat-label">YÊU CẦU CHƯA XỬ LÝ</div><div class="stat-number" id="open-count">0</div><span class="stat-caption">Bao gồm cảnh báo đã tiếp nhận</span></div>
+        <div class="stat-card"><div class="stat-label">ĐƯỜNG TRUYỀN TỚI TRẠM</div><div class="stat-text" id="transport">Chưa kết nối</div><span class="stat-caption" id="gateway-status">Chưa có heartbeat từ Gateway</span></div>
+        <div class="stat-card"><div class="stat-label">MÔ HÌNH NHẬN DIỆN</div><div class="stat-text" id="model-status">Chưa huấn luyện</div><span class="stat-caption">SOS và cảnh báo sơ bộ hoạt động độc lập</span></div>
+      </section>
+      <div id="alarm-banner" class="alarm-banner" hidden role="alert"><div class="alarm-icon">!</div><div><strong>Có người cần hỗ trợ</strong><p id="alarm-text">Kiểm tra cảnh báo và tiếp nhận yêu cầu.</p></div><a href="#events">Xem yêu cầu →</a></div>
+      <section class="section-heading"><div><h2>Thiết bị đeo</h2><p>Số đo chỉ hiển thị khi tín hiệu hợp lệ và còn mới.</p></div><span class="subtle">Cập nhật qua Gateway</span></section>
+      <div id="empty-state" class="empty-state"><div class="empty-symbol">⌁</div><h3>Đang chờ thiết bị</h3><p>Kết nối Gateway với máy tính hoặc khởi động chế độ mô phỏng riêng.</p></div>
+      <section id="worker-list" class="worker-list" aria-live="polite"></section>
+      <section id="demo-panel" class="demo-panel" hidden><div><strong>Bàn điều khiển mô phỏng</strong><p>Các nút bên dưới chỉ tạo dữ liệu thử để kiểm tra luồng xử lý.</p></div><div class="demo-actions"><button data-demo="sos" class="button danger">Thử SOS</button><button data-demo="fall" class="button">Thử nghi té ngã</button><button data-demo="invalid" class="button">Mất tín hiệu quang</button><button data-demo="pause" class="button">Ngắt node</button><button data-demo="local_clear" class="button">Tắt cảnh báo tại áo</button><button data-demo="restore" class="button">Khôi phục dữ liệu</button></div></section>
+      <section id="events" class="events-panel"><div class="section-heading"><div><h2>Nhật ký cảnh báo</h2><p>“Đã tiếp nhận” và “Đã xử lý” được lưu riêng.</p></div><span id="event-total" class="subtle">0 sự kiện</span></div><div class="table-scroll"><table><thead><tr><th>SỰ KIỆN</th><th>NGƯỜI ĐEO</th><th>TRẠM TIẾP NHẬN</th><th>TRẠNG THÁI</th><th>THAO TÁC</th></tr></thead><tbody id="event-list"><tr><td colspan="5" class="table-empty">Chưa có cảnh báo.</td></tr></tbody></table></div></section>
+      <details id="diagnostics" class="diagnostics"><summary>Trạng thái hệ thống và dữ liệu</summary><div id="diagnostic-content">Chưa có dữ liệu.</div></details>
+      <div id="action-message" class="action-message" role="status" aria-live="polite"></div>
+      <footer class="main-footer"><span>SafeWear · Dữ liệu lưu tại máy tính này</span><span>Mẫu thử phục vụ nghiên cứu, chưa xác nhận độ chính xác y tế.</span></footer>
+    </main>
+  </div>
+  <template id="worker-template"><article class="worker-card"><div class="card-header"><div class="worker-info"><div class="worker-avatar">01</div><div><div class="worker-name">Người đeo</div><div class="worker-zone">IMU ở ngực · Đầu quang ở cổ tay</div></div></div><span class="node-status status-badge">Chờ dữ liệu</span></div><div class="card-body"><div class="vitals-grid"><div class="vital"><span class="vital-label">NHỊP TIM</span><div class="vital-number"><span class="hr">—</span><small>bpm</small></div><div class="quality hr-quality">Chưa có tín hiệu hợp lệ</div><svg class="sparkline" viewBox="0 0 300 48" role="img" aria-label="Lịch sử nhịp tim hợp lệ"></svg></div><div class="vital"><span class="vital-label">ĐỘ BÃO HÒA OXY ƯỚC LƯỢNG</span><div class="vital-number"><span class="spo2">—</span><small>%</small></div><div class="quality spo2-quality">Chưa có tín hiệu hợp lệ</div><div class="signal-note">Độ mới và chất lượng được kiểm tra riêng.</div></div></div><div class="bp-panel"><span class="vital-label">HUYẾT ÁP ƯỚC LƯỢNG — THỬ NGHIỆM</span><div class="vital-number"><span class="bp">—</span><small>mmHg</small></div><div class="quality bp-quality">Chưa đủ điều kiện ước lượng</div><div class="signal-note bp-time">Chưa có phiên đo</div><p class="signal-note">Đánh giá trên dữ liệu đối chiếu riêng; chưa dùng chỉ số này để kích hoạt cảnh báo sức khỏe.</p></div><div class="device-details"><div><span>Vận động</span><strong class="activity">Chưa đủ dữ liệu</strong></div><div><span>Pin</span><strong class="battery">—</strong></div><div><span>Tín hiệu nhận</span><strong class="rssi">—</strong></div><div><span>Lần nhận gần nhất</span><strong class="last-seen">—</strong></div></div><div class="wearer-note"><span>ⓘ</span> Giữ nút SOS trên áo 1 giây để chủ động gọi hỗ trợ.</div></div></article></template>
+</body>
+</html>

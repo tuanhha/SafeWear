@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safewear:http-uplink:v1",
+  "title": "SafeWear HTTP uplink v1 request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "gateway_id", "boot_id", "sequence", "age_ms", "active_event_ids", "message"],
+  "properties": {
+    "version": {"type": "integer", "const": 1},
+    "gateway_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,48}$"},
+    "boot_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+    "sequence": {"type": "integer", "minimum": 1, "maximum": 4294967295},
+    "age_ms": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "active_event_ids": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^[0-9]{1,5}:[0-9]{1,10}:[0-9]{1,10}$", "maxLength": 27}},
+    "message": {"type": "object", "required": ["kind"], "properties": {"kind": {"enum": ["rx", "heartbeat", "diagnostic"]}}, "additionalProperties": true}
+  },
+  "x-safewear": {"path": "/api/v1/gateway/ingest", "max_request_bytes": 4096, "max_message_bytes": 512, "max_response_bytes": 4096, "receipt_retention": 100000},
+  "$defs": {
+    "command": {"type": "object", "additionalProperties": false, "required": ["kind", "event_id"], "properties": {"kind": {"enum": ["alarm_ack", "alarm_resolve"]}, "event_id": {"type": "string", "pattern": "^[0-9]{1,5}:[0-9]{1,10}:[0-9]{1,10}$", "maxLength": 27}}},
+    "response": {
+      "type": "object", "additionalProperties": false,
+      "required": ["version", "accepted", "duplicate", "gateway_id", "boot_id", "sequence", "commands"],
+      "properties": {
+        "version": {"type": "integer", "const": 1}, "accepted": {"type": "boolean", "const": true}, "duplicate": {"type": "boolean"},
+        "gateway_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{1,48}$"}, "boot_id": {"type": "string", "pattern": "^[0-9a-f]{16}$"},
+        "sequence": {"type": "integer", "minimum": 1, "maximum": 4294967295},
+        "commands": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/command"}}
+      }
+    }
+  }
+}
